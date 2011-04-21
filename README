@@ -3,11 +3,24 @@
 Hemos escrito un plugin que: 
 
   * agrega un [[boton|http://www.openclipart.org/people/Anonymous/Anonymous_Sandglass.svg]] a Rhythmbox 
+  * agrega un configurador para el boton
+
+
+[[!img config.png class="right"]]
+
+al picar boton ocure uno de dos opciones de configuracion. o si reproduce la hora "En caliente", o sea al momento de omprimir el boton, o el boton la "Agrega a la Cola", en este caso la hora si pronunciarse al llegar a su turno en la cola.
+
   * al oprirmir el boton, si reproduce la hora y segundos
 
-aparte hemos convertido la biblioteca de horas y minutos de ogg/vorbis a ogg/speex, formato specializado para el voz humano, para reducir tama;o. 
+su biblioteca de audio es facil de reproducir, asi que esperemos que muchos graban la hora en su lingua. 
+[[!img piedralabrada.png class="left"]]
+## obtener el plugin Hora para Rhythmbox
 
-## como utilizar el plugin
+la puedes obtener por git, y luego instalarlo como cualcuier plugin de Rhythmbox. 
+
+    git clone git://github.com/mictlan/hora.git
+
+## como instalar plugin de rhythmbox
 
 primer asegura que tienes un carpeta para poner plugins, mirando en: 
 $HOME/.local/share/rhythmbox/plugins/
@@ -16,8 +29,18 @@ $HOME/.local/share/rhythmbox/plugins/
 
 mas secillo es hacer un enlace entre donde temos clonado el plugin (en mi caso es $HOME/yaxhil/wiki/hora), y esta carpeta:  
 
-    ln -s $HOME/yaxil/wiki/hora $HOME/.local/share/rhythmbox/plugins/hora
+    cp -r $HOME/yaxil/wiki/hora $HOME/.local/share/rhythmbox/plugins/hora
 
-ahora reiniciarmos Rhythmbox. Y picamos en Editar>Complemetos>Hora.
+ahora reinicia Rhythmbox. Y pica en Editar>Complemetos>Hora.
 
-[[enlace a plugin|hora]]
+## FAQ/Preguntas Frequentes
+####Como puedo depurar errores?
+
+abrir rhythmbox en el terminal: 
+    rhythmbox -D hora
+####rhthmbox muere de repente al mometo de reproducir la hora
+probablamente no haz instalado alguna biblioteca de grabaciones de la hora, hay uno en español aqui:
+
+
+
+
