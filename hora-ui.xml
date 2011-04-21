@@ -1,0 +1,14 @@
+<ui> 
+  <menubar name="MenuBar"> 
+    <menu name="ControlMenu" action="Control"> 
+	  <placeholder name="PluginPlaceholder">
+		<menuitem name="Hora" action="Hora"/>
+	  </placeholder>
+    </menu>
+  </menubar>
+  <toolbar name="ToolBar">
+	  <placeholder name="PluginPlaceholder">
+		<toolitem name="Hora" action="Hora"/>
+	  </placeholder>
+  </toolbar>
+</ui>

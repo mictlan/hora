@@ -1,0 +1,12 @@
+[RB Plugin]
+Loader=python
+Module=hora
+IAge=1
+Name=Hora
+Description=Experimeinto en la reproducion de la hora. Utiliza a su proprio Riesgo.
+
+Authors=Muchos o nadie, contacto@flujos.org
+
+Copyright=Copyright © 2011 Radio Yaxhil
+
+Website=http://yaxhil.flujos.org/wiki/hora

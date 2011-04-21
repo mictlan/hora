@@ -1,0 +1,23 @@
+# reproduciendo la hora con rhythmbox
+
+Hemos escrito un plugin que: 
+
+  * agrega un [[boton|http://www.openclipart.org/people/Anonymous/Anonymous_Sandglass.svg]] a Rhythmbox 
+  * al oprirmir el boton, si reproduce la hora y segundos
+
+aparte hemos convertido la biblioteca de horas y minutos de ogg/vorbis a ogg/speex, formato specializado para el voz humano, para reducir tama;o. 
+
+## como utilizar el plugin
+
+primer asegura que tienes un carpeta para poner plugins, mirando en: 
+$HOME/.local/share/rhythmbox/plugins/
+
+    mkdir -p $HOME/.local/share/rhythmbox/plugins/
+
+mas secillo es hacer un enlace entre donde temos clonado el plugin (en mi caso es $HOME/yaxhil/wiki/hora), y esta carpeta:  
+
+    ln -s $HOME/yaxil/wiki/hora $HOME/.local/share/rhythmbox/plugins/hora
+
+ahora reiniciarmos Rhythmbox. Y picamos en Editar>Complemetos>Hora.
+
+[[enlace a plugin|hora]]
