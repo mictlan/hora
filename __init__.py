@@ -131,7 +131,7 @@ class HoraPlugin(rb.Plugin):
 			shell.add_to_queue(load_uri)
 			
 		else:
-			"direct play selected in button configuration"
+			print "direct play selected in button configuration"
 			self.build_audio_file(self.uri)
 			shell.props.shell_player.pause()
 			speaker = gst.element_factory_make("playbin2")
