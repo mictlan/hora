@@ -64,19 +64,23 @@ class HoraPlugin(rb.Plugin):
 		self.UI_ID = ui_manager.add_ui_from_string(ui_str)
 		ui_manager.ensure_update()
 
-		# add hora.ogg
+		# add hora.spx
 		fpath =  self.find_file(audio_file)
 		self.uri = fpath
 		gconf.client_get_default().set_string(gconf_keys['button'], "Agregar a la Cola")
+		gconf.client_get_default().set_string(gconf_keys['offset'], "0")
 
 		#self.gconf.set_string(gconf_keys['button'], "not queue")
 		load_uri = "file://"+ self.uri
 
 		entry = self.db.entry_lookup_by_location(self.uri)
-
          	if entry == None:
 			print "add entry: "+ load_uri				
                 	entry = self.db.entry_new(self.entry_type, load_uri)
+			
+			self.db.set(entry, rhythmdb.PROP_TITLE, "Didza Lube")
+			self.db.set(entry, rhythmdb.PROP_ALBUM, "HORA")
+		        self.db.set(entry, rhythmdb.PROP_ARTIST, "Radio Yaxhil")
 
 			
 	def create_configure_dialog(self, dialog=None):
@@ -155,42 +159,57 @@ class HoraPlugin(rb.Plugin):
 		print "build "+ url
 
 
-		HOUR = str(time.localtime().tm_hour)
-
+		HRS = str(time.localtime().tm_hour)
+        
 		#offset from system time
 		offset = gconf.client_get_default().get_string(gconf_keys['offset'])
 		
         	if offset != "0":
-			if HOUR == "0":
-				HOUR = "12"
-            		HOUR = int(HOUR) + int(offset)
-			HOUR = str(HOUR)
-		if len(HOUR) == 1:
-			HOUR = "0"+ HOUR
+			if HRS == "0":
+				HRS = "12"
+            			HRS = int(HRS) + int(offset)
+		HRS = str(HRS)
+		if len(HRS) == 1:
+			HRS = "0"+ HRS
 		MIN = str(time.localtime().tm_min)
+        	# MIN = "0" # to test MIN = 00
 		if len(MIN) == 1:
 			MIN = "0"+ MIN
-		#build audio file
-		
-		print "son las: %s:%s" % (HOUR, MIN)
-		print url
-		HOUR_STR = "/audio/HRS"+ HOUR+ ".ogg.spx"
-		MIN_STR = "/audio/MIN"+ MIN+ ".ogg.spx"
-		fhour = self.find_file(HOUR_STR)
-		fmin = self.find_file(MIN_STR)
+		if MIN == "00":
+			print "Es la "+ HRS+ " en punto"
+			HRS = HRS+ "_0"
+			print "out file: "+ url
+			dest = open(url,'wb')
+			print dest
+			HRS_STR = "/audio/HRS"+ HRS+ ".spx"
+			print HRS_STR
+			fhour = self.find_file(HRS_STR)
 
-		dest = open(url,'wb')
-		print dest
-		HOUR_STR = "/audio/HRS"+ HOUR+ ".ogg.spx"
-		MIN_STR = "/audio/MIN"+ MIN+ ".ogg.spx"
-		fhour = self.find_file(HOUR_STR)
-		fmin = self.find_file(MIN_STR)
-		# copy file should be done with gst
-		#print "copy %s  to %s" % (fhour, dest)
-		shutil.copyfileobj(open(fhour,'rb'), dest)
-		#print "copy %s  to %s" % (fmin, dest)
-		shutil.copyfileobj(open(fmin,'rb'), dest)
-		dest.close()
+			# copy file should be done with gst
+			#print "copy %s  to %s" % (fhour, dest)
+			shutil.copyfileobj(open(fhour,'rb'), dest)
+			dest.close()
+
+		#build audio file
+		else:
+			print "son las: %s:%s" % (HRS, MIN)
+			MIN_STR = "/audio/MIN"+ MIN+ ".spx"
+			fmin = self.find_file(MIN_STR)
+			print "out file: "+ url
+			dest = open(url,'wb')
+			print dest
+			HRS_STR = "/audio/HRS"+ HRS+ ".spx"
+			print HRS_STR
+			fhour = self.find_file(HRS_STR)
+
+			# copy file should be done with gst
+			#print "copy %s  to %s" % (fhour, dest)
+			shutil.copyfileobj(open(fhour,'rb'), dest)
+			#print "copy %s  to %s" % (fmin, dest)
+			shutil.copyfileobj(open(fmin,'rb'), dest)
+			dest.close()
+
+
 		return
 
 class HoraSource(rb.BrowserSource):
