@@ -7,14 +7,13 @@ import thread
 import gconf
 import string
 
-
 from HoraConfigureDialog import HoraConfigureDialog
 #from HoraSource import HoraSource
 
-gconf_keys = {	'offset' : '/apps/rhythmbox/plugins/hora/offset', 
+gconf_keys = {	'offset' : '/apps/rhythmbox/plugins/hora/offset',
 		'button' : '/apps/rhythmbox/plugins/hora/button' }
- 
-audio_file = "hora.spx"		
+
+audio_file = "hora.spx"
 
 class HoraPlugin(rb.Plugin):
 
@@ -29,7 +28,13 @@ class HoraPlugin(rb.Plugin):
 		
 		
 		print "register entry type"
-	        self.entry_type = self.db.entry_register_type("HoraEntryType")
+		
+		if hasattr(self.db, 'entry_register_type'):
+			self.entry_type = self.db.entry_register_type("HoraEntryType")
+		else:
+			self.entry_type = HoraEntryType()
+			self.db.register_entry_type(self.entry_type)
+			 
 		group = rb.rb_source_group_get_by_name("shared")
 		self.source = gobject.new (HoraSource,
                     shell=self.shell,
@@ -82,7 +87,6 @@ class HoraPlugin(rb.Plugin):
 			self.db.set(entry, rhythmdb.PROP_ALBUM, "HORA")
 		        self.db.set(entry, rhythmdb.PROP_ARTIST, "Radio Yaxhil")
 
-			
 	def create_configure_dialog(self, dialog=None):
 	        if not dialog:
             		builder_file = self.find_file("hora-prefs.ui")
@@ -157,13 +161,9 @@ class HoraPlugin(rb.Plugin):
 	def build_audio_file(self, url):
 		"""build audio file from time library"""
 		print "build "+ url
-
-
 		HRS = str(time.localtime().tm_hour)
-        
 		#offset from system time
 		offset = gconf.client_get_default().get_string(gconf_keys['offset'])
-		
         	if offset != "0":
 			if HRS == "0":
 				HRS = "12"
@@ -209,8 +209,11 @@ class HoraPlugin(rb.Plugin):
 			shutil.copyfileobj(open(fmin,'rb'), dest)
 			dest.close()
 
-
 		return
+
+class HoraEntryType(rhythmdb.EntryType):
+    def __init__(self):
+        rhythmdb.EntryType.__init__(self, name='hora-entry-type')
 
 class HoraSource(rb.BrowserSource):
     def __init__(self):
