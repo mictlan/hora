@@ -110,6 +110,10 @@ class HoraPlugin(rb.Plugin):
 		del self.shell
 		del self.UI_ID
 		del self.uri
+		print "unset gconf keys"
+		gconf.client_get_default().unset(gconf_keys['offset'])
+		gconf.client_get_default().unset(gconf_keys['button'])
+
 
 	def hora(self, event, shell):
 		load_uri = "file://"+ self.uri
