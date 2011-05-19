@@ -11,6 +11,7 @@ from HoraConfigureDialog import HoraConfigureDialog
 #from HoraSource import HoraSource
 
 gconf_keys = {	'offset' : '/apps/rhythmbox/plugins/hora/offset',
+		'crontab' : '/apps/rhythmbox/plugins/hora/crontab',
 		'button' : '/apps/rhythmbox/plugins/hora/button' }
 
 audio_file = "hora.spx"
@@ -57,13 +58,19 @@ class HoraPlugin(rb.Plugin):
         	iconfactory.add("hora-button", iconset)
         	iconfactory.add_default()
 
-		action = gtk.Action ('Hora', 
+		hora_action = gtk.Action ('Hora',
                      _('Hora'), 
                      _('Que hora Es?'),
                      "hora-button")
-		action.connect('activate', self.hora, shell)
+
+		#action.connect('activate', self.hora, shell)
+		hora_action.connect('activate', self.hora, shell)
+
 		self.action_group = gtk.ActionGroup('HoraActionGroup')
-		self.action_group.add_action(action)
+		self.action_group.add_action_with_accel(hora_action, '<Control>h')
+		self.action_group.add_toggle_actions([('Cron', None, '_Cron', '<Control>c',
+                                         'Activar Cron', self.cron)])
+
 		ui_manager = shell.get_ui_manager()
 		ui_manager.insert_action_group(self.action_group, 0)
 		self.UI_ID = ui_manager.add_ui_from_string(ui_str)
@@ -74,6 +81,7 @@ class HoraPlugin(rb.Plugin):
 		self.uri = fpath
 		gconf.client_get_default().set_string(gconf_keys['button'], "Agregar a la Cola")
 		gconf.client_get_default().set_string(gconf_keys['offset'], "0")
+		gconf.client_get_default().set_string(gconf_keys['crontab'], "Disactivado")
 
 		#self.gconf.set_string(gconf_keys['button'], "not queue")
 		load_uri = "file://"+ self.uri
@@ -113,6 +121,7 @@ class HoraPlugin(rb.Plugin):
 		print "unset gconf keys"
 		gconf.client_get_default().unset(gconf_keys['offset'])
 		gconf.client_get_default().unset(gconf_keys['button'])
+		gconf.client_get_default().unset(gconf_keys['crontab'])
 
 
 	def hora(self, event, shell):
@@ -220,6 +229,31 @@ class HoraPlugin(rb.Plugin):
 
 		return
 
+	def cron(self, event):
+		import os
+		interval = 15
+		# expose interval as gconf configure option
+		#if gconf.client_get_default().get_string(gconf_keys['crontab']) == "Disactivado":
+			#return
+		exists = 0
+		cronline = "*/%d * * * * export DISPLAY=:0 && /usr/bin/rhythmbox-client --enqueue $HOME/.local/share/rhythmbox/plugins/hora/hora.spx" % (interval)
+		crontab = ""
+		for line in os.popen("crontab -l").readlines():
+			if line != cronline+ "\n" and line != "\n":
+				print "add line "+ line
+				crontab += line
+			if line == cronline+ "\n":
+				print "line alread exists"
+				exists = 1
+				if event.get_active() == True:
+					crontab += line
+		if event.get_active() == True and exists == 0:
+			print "add cronline"+ cronline
+			crontab += cronline
+		command = "crontab -l; echo '%s' | crontab -" % crontab
+		os.popen(command)
+		return
+
 class HoraEntryType(rhythmdb.EntryType):
     def __init__(self):
         rhythmdb.EntryType.__init__(self, name='hora-entry-type')
@@ -235,6 +269,7 @@ ui_str = \
     <menu name="ControlMenu" action="Control"> 
 	  <placeholder name="PluginPlaceholder">
 		<menuitem name="Hora" action="Hora"/>
+		<menuitem name="Cron" action="Cron"/>
 	  </placeholder>
     </menu>
   </menubar>
