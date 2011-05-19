@@ -1,46 +1,16 @@
-# reproduciendo la hora con rhythmbox
+Esta plugin permite que rhythmbox pronuncia la hora de la sistema de
+distintas maneras: 
 
-Hemos escrito un plugin que: 
-
-  * agrega un [[boton|http://www.openclipart.org/people/Anonymous/Anonymous_Sandglass.svg]] a Rhythmbox 
-  * agrega un configurador para el boton
-
-
-[[!img config.png class="right"]]
-
-al picar boton ocure uno de dos opciones de configuracion. o si reproduce la hora "En caliente", o sea al momento de omprimir el boton, o el boton la "Agrega a la Cola", en este caso la hora si pronunciarse al llegar a su turno en la cola.
-
-  * al oprirmir el boton, si reproduce la hora y segundos
-
-su biblioteca de audio es facil de reproducir, asi que esperemos que muchos graban la hora en su lingua. 
-[[!img piedralabrada.png class="left"]]
-## obtener el plugin Hora para Rhythmbox
-
-la puedes obtener por git, y luego instalarlo como cualcuier plugin de Rhythmbox. 
+  1. agrega la hora a la cola, y pronucia la hora de la sistema 
+  al momento de reproducirse
+  2. pronucia la hora 'en caliente'
+  3. agrega un boton que habilita cron, pronunciando la hora a intervalos
+  predeterminados
 
     git clone git://github.com/mictlan/hora.git
 
-## como instalar plugin de rhythmbox
+el plugin va en: $HOME/.local/share/rhythmbox/plugins/
 
-primer asegura que tienes un carpeta para poner plugins, mirando en: 
-$HOME/.local/share/rhythmbox/plugins/
+para funcionar requiere de una biblioteca de audios que si pone en la 'audio' dentro de la carpeta del plugin. hay uno disponible bajo CC attribuccion aqui:
 
-    mkdir -p $HOME/.local/share/rhythmbox/plugins/
-
-mas secillo es hacer un enlace entre donde temos clonado el plugin (en mi caso es $HOME/yaxhil/wiki/hora), y esta carpeta:  
-
-    cp -r $HOME/yaxil/wiki/hora $HOME/.local/share/rhythmbox/plugins/hora
-
-ahora reinicia Rhythmbox. Y pica en Editar>Complemetos>Hora.
-
-## FAQ/Preguntas Frequentes
-####Como puedo depurar errores?
-
-abrir rhythmbox en el terminal: 
-    rhythmbox -D hora
-####rhthmbox muere de repente al mometo de reproducir la hora
-probablamente no haz instalado alguna biblioteca de grabaciones de la hora, hay uno en español aqui:
-
-
-
-
+http://yaxhil.flujos.org/wiki/hora_audios-tar.gz
