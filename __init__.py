@@ -125,14 +125,19 @@ class HoraPlugin(rb.Plugin):
 			Q_LIST = []
 			queue = shell.props.queue_source
 			for treerow in queue.props.base_query_model:
-  				entry, path = list(treerow)
-  				Q_LIST.append(shell.props.db.entry_get(entry, rhythmdb.PROP_LOCATION))
+				entry, path = list(treerow)
+				type_hora = self.entry_type
+			        type_this = entry.get_entry_type()
+        			if type_this == type_hora:
+					id=self.db.entry_get(entry, rhythmdb.PROP_ENTRY_ID)
+					Q_LIST.append(int(id))
+					#Q_LIST.append(shell.props.db.entry_get(entry, rhythmdb.PROP_LOCATION))
 			if not len(Q_LIST) == 0:
 				my_file =  string.split(self.uri, "/")[-1:][0]
 				print my_file, Q_LIST
 				base, ext = string.split(my_file, ".")
 				path = string.split(self.uri, 'hora')[0]
-				uri = path+ base+ str(len(Q_LIST))+ "."+ ext
+				uri = path+ "hora/"+ base+ str(len(Q_LIST))+ "."+ ext
 				entry = self.db.entry_lookup_by_location(uri)
 				load_uri = "file://"+ uri
 				#print "add to queue:", load_uri
